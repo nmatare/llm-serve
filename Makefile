@@ -8,17 +8,17 @@ include .env
 
 init:
 	@echo "$(GREEN)Initializing Terraform..kk.$(RESET)"
-	terraform init -upgrade
+	terraform -chdir=terraform init -upgrade
 
 plan:
 	@echo "$(GREEN)Starting Terraform plan...$(RESET)"
-	terraform plan -out=plan.out
+	terraform -chdir=terraform plan -out=plan.out
 
 apply:
-	terraform apply -auto-approve plan.out
+	terraform -chdir=terraform apply -auto-approve plan.out
 
 port-forward:
 	kubectl port-forward service/$(SERVICE_NAME) 8080:80
 
 destroy:
-	terraform destroy -auto-approve
+	terraform -chdir=terraform destroy -auto-approve

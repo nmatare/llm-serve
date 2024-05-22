@@ -1,5 +1,5 @@
 locals {
-  dotenv = { for tuple in regexall("(.*)=(.*)", file(".env")) : tuple[0] => tuple[1] }
+  dotenv = { for tuple in regexall("(.*)=(.*)", file("../.env")) : tuple[0] => tuple[1] }
 }
 
 locals {
