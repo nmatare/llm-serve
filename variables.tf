@@ -12,11 +12,11 @@ locals {
   github_repo_url          = local.dotenv["GITHUB_REPO_URL"]
   github_repo_organization = local.dotenv["GITHUB_REPO_ORGANIZATION"]
 
-  cluster_cloud = local.dotenv["CLUSTER_CLOUD"]
+  cluster_cloud  = local.dotenv["CLUSTER_CLOUD"]
   cluster_name   = local.dotenv["CLUSTER_NAME"]
   cluster_region = local.dotenv["CLUSTER_REGION"]
 
-  ray_operator_version       = local.dotenv["RAY_OPERATOR_STACK_VERSION"]
+  ray_operator_version = local.dotenv["RAY_OPERATOR_STACK_VERSION"]
 
 }
 

@@ -3,8 +3,11 @@ variable "ray_operator_helm_chart_version" {
   type        = string
 }
 
-variable "gemma_model_service_name" {
-  description = "The name of the RayService hosting the Gemma model clas"
-  type        = string
-  default     = "gemma-service"
+variable "settings" {
+  description = "The settings"
+  type        = map(string)
+}
+
+locals {
+  model_qualified_name = replace("${var.settings.model_name}-model-server", "/[^a-z0-9.-]/", "-")
 }

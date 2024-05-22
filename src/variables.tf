@@ -32,4 +32,6 @@ locals {
   subnetwork             = "${local.cluster_name}-subnet"
   ip_range_pods_name     = "ip-range-pods"
   ip_range_services_name = "ip-range-scv"
+
+  _has_accelerator_gpu = anytrue([for pool in var.node_pools : pool.accelerator_count > 0])
 }

@@ -26,32 +26,29 @@ terraform {
 
   // vars cannot be used so ensure match with below
   backend "gcs" {
-    bucket = "llm_serve"
+    bucket = "llm_serving"
     prefix = "terraform/state-infrastructure"
   }
 
 }
 
-variable "storage_bucket" {
-  description = "The name of the GCS storage bucket for state and other data"
-  type        = string
-  default     = "llm_serve"
-}
 
 provider "google" {
   project = local.project_id
 }
 
+data "google_client_config" "infrastructure" {}
+
 provider "kubernetes" {
   host                   = "https://${module.base.cluster_host}"
   token                  = data.google_client_config.infrastructure.access_token
-  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+  cluster_ca_certificate = base64decode(module.base.cluster_ca_certificate)
 }
 
 provider "kubectl" {
   host                   = "https://${module.base.cluster_host}"
   token                  = data.google_client_config.infrastructure.access_token
-  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+  cluster_ca_certificate = base64decode(module.base.cluster_ca_certificate)
   load_config_file       = false
 }
 
@@ -59,6 +56,6 @@ provider "helm" {
   kubernetes {
     host                   = "https://${module.base.cluster_host}"
     token                  = data.google_client_config.infrastructure.access_token
-    cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+    cluster_ca_certificate = base64decode(module.base.cluster_ca_certificate)
   }
 }

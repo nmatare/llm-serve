@@ -2,7 +2,8 @@ resource "kubernetes_config_map" "model_src" {
   depends_on = [helm_release.kuberay-operator]
 
   metadata {
-    name = "${var.settings.model_name}-model-server"
+    name      = local.model_qualified_name
+    namespace = kubernetes_namespace.ray.metadata[0].name
   }
 
   data = {
@@ -13,7 +14,7 @@ import transformers
 import torch
 from ray import serve
 from fastapi import FastAPI, Body
-from transformers import AutoTokenizer, BitsAndBytesConfig, AutoModelForCausalLM, AutoConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 from pydantic import BaseModel
 
 class Query(BaseModel):
@@ -21,7 +22,10 @@ class Query(BaseModel):
 
 app = FastAPI()
 
-@serve.deployment(num_replicas=1)
+@serve.deployment(
+    num_replicas=int(os.environ['RAY_SERVE_NUM_REPLICAS']),
+    ray_actor_options={"num_cpus": 8, "num_gpus": 1}
+)
 @serve.ingress(app)
 class App:
     tokenizer = ""
@@ -29,12 +33,12 @@ class App:
 
     def __init__(self):
         self.tokenizer = AutoTokenizer.from_pretrained(
-            "${var.settings.huggingface_model_name}",
+            "${var.settings.model_name}",
             token=os.environ["HUGGINGFACE_API_SECRET"]
         )
 
         model = AutoModelForCausalLM.from_pretrained(
-            "${var.settings.huggingface_model_name}",
+            "${var.settings.model_name}",
             device_map="auto",
             token=os.environ["HUGGINGFACE_API_SECRET"]
         )

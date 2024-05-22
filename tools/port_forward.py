@@ -15,26 +15,35 @@ import sys
 import subprocess
 import time
 
-PROJECT_ID = os.getenv("PROJECT_ID", "llm-serve-423918")
-ZONE = os.getenv("ZONE", "us-east1-b")
-CLUSTER_NAME = os.getenv("CLUSTER_NAME", "llm-serve")
+PROJECT_ID = os.getenv("PROJECT_ID", "llm-serve-112")
+ZONE = os.getenv("ZONE", "us-central1")
+CLUSTER_NAME = os.getenv("CLUSTER_NAME", "testing-serving-gcp-us-central1")
 
-GRAFANA_SVC_NAME = os.getenv("GRAFANA_SVC_NAME", "svc/prometheus-grafana")
-GRAFANA_SVC_PORTS = os.getenv("GRAFANA_SVC_PORTS", "8000:80")
-GRAFANA_SVC_NAMESPACE = os.getenv("GRAFANA_SVC_NAMESPACE", "monitoring")
+RAY_DASHBOARD_SVC_NAME = os.getenv(
+    "RAY_DASHBOARD_SVC_NAME", "svc/google-recurrentgemma-2b-it-model-server-head-svc"
+)
+RAY_DASHBOARD_SVC_PORTS = os.getenv("RAY_DASHBOARD_SVC_PORTS", "8265:8265")
+RAY_DASHBOARD_SVC_NAMESPACE = os.getenv("RAY_DASHBOARD_SVC_NAMESPACE", "ray")
+
+RAY_MODEL_SERVER_SVC_NAME = os.getenv(
+    "RAY_DASHBOARD_SVC_NAME", "svc/google-recurrentgemma-2b-it-model-server-serve-svc"
+)
+RAY_MODEL_SERVER_SVC_PORTS = os.getenv("RAY_DASHBOARD_SVC_PORTS", "8000:8000")
+RAY_MODEL_SERVER_SVC_NAMESPACE = os.getenv("RAY_DASHBOARD_SVC_NAMESPACE", "ray")
+
 
 PARAMS = dict(
-    grafana=(
+    ray=(
         PROJECT_ID,
         ZONE,
         CLUSTER_NAME,
-        GRAFANA_SVC_NAMESPACE,
-        GRAFANA_SVC_NAME,
-        GRAFANA_SVC_PORTS,
+        RAY_DASHBOARD_SVC_NAMESPACE,
+        RAY_DASHBOARD_SVC_NAME,
+        RAY_DASHBOARD_SVC_PORTS,
     ),
 )
 
-SERVICES = ["ray-dashboard", "ingress"]
+SERVICES = ["ray"]
 
 if __name__ == "__main__":
 

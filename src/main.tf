@@ -1,28 +1,26 @@
-# TODO: Will also have to provision AWS/Equinox clusters and bridge them together to reduce latency, esp
-# for servers that are using one provider or another (e.g., Coinbase+AWS...)
-# then each node will have to be pinned to that specific region.
-# https://cloud.google.com/architecture/build-ha-vpn-connections-google-cloud-aws
-
 variable "node_pools_auth_scopes" {
   type        = map(list(string))
   description = "Map of lists containing node oauth scopes by node-pool name"
   default = {
-    all = [
+    default = [
       "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/compute.readonly",
+      "https://www.googleapis.com/auth/compute",
       "https://www.googleapis.com/auth/monitoring",
     ]
 
-    persistent-node = [
+    persistent-gpu-backbone = [
       "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/devstorage.full_control",
       "https://www.googleapis.com/auth/trace.append",
       "https://www.googleapis.com/auth/servicecontrol",
-      "https://www.googleapis.com/auth/compute",
       "https://www.googleapis.com/auth/service.management.readonly",
       "https://www.googleapis.com/auth/taskqueue"
     ]
+
   }
 }
 
@@ -31,7 +29,7 @@ variable "node_pools_taints" {
   description = "Map of lists containing node taints by node-pool name"
 
   default = {
-    all                 = []
+    default             = []
     persistent-backbone = []
 
     ephemeral-node = [
@@ -95,6 +93,7 @@ module "gke" {
   ip_range_services          = local.ip_range_services_name
   create_service_account     = true
   grant_registry_access      = true
+  deletion_protection        = false
   node_pools                 = var.node_pools
   node_pools_oauth_scopes    = var.node_pools_auth_scopes
   horizontal_pod_autoscaling = true

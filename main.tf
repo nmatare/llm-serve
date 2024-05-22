@@ -12,7 +12,7 @@ module "base" {
     // For RayKube Operator
     {
       name               = "persistent-gpu-backbone"
-      machine_type       = "n1-standard-8"
+      machine_type       = "a2-highgpu-1g"
       min_count          = 1
       max_count          = 1
       initial_node_count = 1
@@ -22,54 +22,46 @@ module "base" {
       auto_repair        = true
       auto_upgrade       = true
 
-      accelerator_count = 2
-      accelerator_type  = "nvidia-tesla-p100"
+      accelerator_count  = 1
+      accelerator_type   = "nvidia-tesla-a100"
+      gpu_driver_version = "LATEST"
     },
   ]
-
-  # https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/blob/main/ai-ml/gke-ray/rayserve/models/quantized-model.yaml
-
-  settings = {
-    # ref: https://github.com/ray-project/ray-llm
-    ray_node_image                 = "anyscale/ray-llm"
-    ray_node_image_tag             = "0.5.0"
-    service_unhealthy_threshold    = 2400
-    deployment_unhealthy_threshold = 2400
-
-    ray_head_node_cpu_count = 2
-    ray_head_node_memory    = "8Gi"
-
-    ray_serving_accelerator_count  = 2
-    ray_serving_accelerator_marker = "nvidia.com/gpu"
-    ray_serving_accelerator_type   = "nvidia-tesla-p100"
-    ray_serving_accelerator_memory = "40Gi"z
-    # resources: '"{\"accelerator_type_cpu\": 22, \"accelerator_type_l4\": 2}"'
-
-    ray_serving_cpu_count          = 20
-
-    ray_serving_min_replicas = 1
-    ray_serving_max_replicas = 2
-
-  }
 
 }
 
 // Hosts provider models on shared cluster
 //
-# module "model_google-gemma" {
-#   source = "./ray_serving"
+module "foundational_model_google-gemma" {
+  source = "./serving"
+  count  = 1
 
-#   # providers = {
-#   #   argocd       = argocd
-#   #   google       = google
-#   #   kubernetes   = kubernetes.europe-west
-#   #   kubectl      = kubectl.europe-west
-#   #   kubectl.head = kubectl.europe-west
-#   #   helm         = helm.europe-west
-#   # }
+  settings = {
+    # ref: https://github.com/ray-project/ray-llm
+    model_name        = "google/gemma-2b"
+    model_import_file = "model"
+    model_import_path = "model:entrypoint" # model_import_file:app_name
 
-#   cluster_name                    = local.cluster_name
-#   region                          = local.cluster_region
-#   ray_operator_helm_chart_version = local.ray_operator_version
+    ray_k8_service_unhealthy_threshold     = 600
+    ray_k8_deployment_unhealthy_threshold  = 600
+    ray_k8_deployment_service_num_replicas = 1
 
-# }
+    ray_image     = "anyscale/ray-llm"
+    ray_image_tag = "0.5.0"
+
+    ray_head_node_cpu_count = 2
+    ray_head_node_memory    = "8Gi"
+
+    ray_model_serving_max_replicas       = 1
+    ray_model_serving_min_replicas       = 1
+    ray_model_serving_cpu_count          = 12
+    ray_model_serving_accelerator_marker = "nvidia.com/gpu"
+    ray_model_serving_accelerator_type   = "nvidia-tesla-a100"
+    ray_model_serving_accelerator_count  = 1
+    ray_model_serving_accelerator_memory = "40Gi"
+
+    secrets_huggingface = jsonencode(local.huggingface_secrets)
+  }
+
+  ray_operator_helm_chart_version = local.ray_operator_version
+}
