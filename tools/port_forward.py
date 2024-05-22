@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright 2021-2022 Pocket Portfolio - All Rights Reserved
-# Unauthorized copying of this file is strictly prohibited.
-#
-# "Author: Nathan Matare <nathan.matare@pocket-portfolio.com>"
-#
-# """ Port Forward helper Script
-# This should probably be written in GO or be a shell script...
-# """
 
 from typing import List
 import os
@@ -20,13 +12,13 @@ ZONE = os.getenv("ZONE", "us-central1")
 CLUSTER_NAME = os.getenv("CLUSTER_NAME", "testing-serving-gcp-us-central1")
 
 RAY_DASHBOARD_SVC_NAME = os.getenv(
-    "RAY_DASHBOARD_SVC_NAME", "svc/google-recurrentgemma-2b-it-model-server-head-svc"
+    "RAY_DASHBOARD_SVC_NAME", "svc/google-gemma-2b-model-server-head-svc"
 )
 RAY_DASHBOARD_SVC_PORTS = os.getenv("RAY_DASHBOARD_SVC_PORTS", "8265:8265")
 RAY_DASHBOARD_SVC_NAMESPACE = os.getenv("RAY_DASHBOARD_SVC_NAMESPACE", "ray")
 
 RAY_MODEL_SERVER_SVC_NAME = os.getenv(
-    "RAY_DASHBOARD_SVC_NAME", "svc/google-recurrentgemma-2b-it-model-server-serve-svc"
+    "RAY_DASHBOARD_SVC_NAME", "svc/google-gemma-2b-model-server-head-svc"
 )
 RAY_MODEL_SERVER_SVC_PORTS = os.getenv("RAY_DASHBOARD_SVC_PORTS", "8000:8000")
 RAY_MODEL_SERVER_SVC_NAMESPACE = os.getenv("RAY_DASHBOARD_SVC_NAMESPACE", "ray")
@@ -41,9 +33,17 @@ PARAMS = dict(
         RAY_DASHBOARD_SVC_NAME,
         RAY_DASHBOARD_SVC_PORTS,
     ),
+    model_server=(
+        PROJECT_ID,
+        ZONE,
+        CLUSTER_NAME,
+        RAY_MODEL_SERVER_SVC_NAMESPACE,
+        RAY_MODEL_SERVER_SVC_NAME,
+        RAY_MODEL_SERVER_SVC_PORTS,
+    ),
 )
 
-SERVICES = ["ray"]
+SERVICES = ["ray", "model_server"]
 
 if __name__ == "__main__":
 

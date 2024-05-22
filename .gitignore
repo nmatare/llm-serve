@@ -79,6 +79,4 @@ terraform.rc
 -target*
 
 # Omit docs
-docs/
 site/
-mkdocs.yml

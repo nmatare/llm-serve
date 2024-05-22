@@ -1,0 +1,99 @@
+---
+site_name: Serving LLMs on AnyScale
+site_description: Toy Example of Serving LLMs on Ray
+repo_url: https://github.com/nmatare/llm-serve
+repo_name: llm-serve
+
+site_author: Nathan Matare
+copyright: Nathan Matare | 2024 - 2025
+
+nav:
+  - Introduction: slide.md
+  - Steps: steps.md
+
+docs_dir: docs/
+use_directory_urls: true
+
+theme:
+  name: material
+  custom_dir: theme
+  nav_style: dark
+  palette:
+    primary: indigo
+    accent: red
+
+  feature:
+    tabs: true
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - python
+    - go
+    - bash
+
+reveal:
+  path: reveal.js/dist
+  transition: slide
+  theme:
+    name: white.css
+    path: theme
+
+  plugin:
+    path: reveal.js/plugin
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - footnotes
+  - pymdownx.snippets
+  - codehilite:
+     linenums: true
+  - pymdownx.arithmatex
+  - pymdownx.critic
+  - pymdownx.details
+#  - pymdownx.emoji:
+#      emoji_index: !!python/name:materialx.emoji.twemoji
+#      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+  - pymdownx.tilde
+  - pymdownx.magiclink:
+      repo_url_shortener: true
+      repo_url_shorthand: true
+      social_url_shorthand: true
+      social_url_shortener: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+      # custom_fences:
+      #   - name: mermaid
+      #     class: mermaid
+      #     format: !!python/name:pymdownx.superfences.fence_div_format
+
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      type: datetime
+      locale: en
+      fallback_to_build_date: true
+  - search
+  - mkdocstrings
+
+extra:
+  generator: false
+  social:
+  - icon: fontawesome/brands/github-alt
+    link: https://github.com/nmatare/llm-serve
+  - icon: fontawesome/brands/twitter
+    link: https://twitter.com/anyscalecompute
+  - icon: fontawesome/brands/linkedin
+    link: https://www.linkedin.com/company/joinanyscale/

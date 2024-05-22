@@ -6,8 +6,8 @@ keywords: overview,introduction
 
 # llm-serve
 
-This is an example repository containing minimal code to setup and serve an LLM (Gemma class)
-on owned infrastructure using GCP and Ray.
+A simple demonstration setting up minimal infra to serve an LLM(Gemma 7B) on
+user owned infrastructure using Google Cloud and Ray primitives.
 
 ### How to run
 
@@ -20,14 +20,14 @@ gcloud auth application-default login
 
 gcloud container clusters get-credentials testing-serving-gcp-us-central1 --zone us-central1
 
-# terraform new workspace testing
-
 terraform init
 terraform plan
 terraform apply
+
+./tools/port-forward.py   # port forward all services (must be created and online)
 ```
 
-# Helpful Debbugging Commands
+### Helpful Debbugging Commands
 
 ```sh
 k get raycluster -n ray
@@ -57,20 +57,13 @@ k describe cm google-recurrentgemma-2b-it-model-server -n ray
 
 ```
 
-## Test the Serving API
+## Test the Inference/Serving API
 
 ```sh
 curl -X POST http://localhost:8000 \
   -H "Content-Type: application/json" \
-  -d '{"text": "Complete this sentence: (return one word only)"}'
+  -d '{"text": "Im going to say hello, you should return: (one word only)"}'
 
-```
-
-
-### Running locally
-
-```
-docker pull anyscale/ray-llm:0.5.0
 ```
 
 ### Google Cloud Resources

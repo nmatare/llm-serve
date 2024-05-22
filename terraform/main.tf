@@ -32,6 +32,7 @@ module "base" {
 
 // Hosts provider models on shared cluster
 //
+# terraform destroy -target module.foundational_model_google-gemma
 module "foundational_model_google-gemma" {
   source = "./serving"
   count  = 1
@@ -54,7 +55,7 @@ module "foundational_model_google-gemma" {
 
     ray_model_serving_max_replicas       = 1
     ray_model_serving_min_replicas       = 1
-    ray_model_serving_cpu_count          = 12
+    ray_model_serving_cpu_count          = 8
     ray_model_serving_accelerator_marker = "nvidia.com/gpu"
     ray_model_serving_accelerator_type   = "nvidia-tesla-a100"
     ray_model_serving_accelerator_count  = 1

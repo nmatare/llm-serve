@@ -24,7 +24,7 @@ app = FastAPI()
 
 @serve.deployment(
     num_replicas=int(os.environ['RAY_SERVE_NUM_REPLICAS']),
-    ray_actor_options={"num_cpus": 8, "num_gpus": 1}
+    # ray_actor_options={"num_cpus": 8, "num_gpus": 1}
 )
 @serve.ingress(app)
 class App:
